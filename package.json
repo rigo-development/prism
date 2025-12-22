@@ -1,0 +1,19 @@
+{
+    "name": "prism",
+    "version": "0.0.0",
+    "private": true,
+    "workspaces": [
+        "apps/*",
+        "packages/*"
+    ],
+    "scripts": {
+        "build": "npm run build --workspaces",
+        "test": "npm run test --workspaces",
+        "dev": "npm run dev --workspaces"
+    },
+    "devDependencies": {
+        "typescript": "^5.0.0",
+        "prettier": "^3.0.0",
+        "eslint": "^8.0.0"
+    }
+}
