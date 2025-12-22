@@ -9,11 +9,12 @@
     "scripts": {
         "build": "npm run build --workspaces",
         "test": "npm run test --workspaces",
-        "dev": "npm run dev --workspaces"
+        "dev": "concurrently -n \"SHARED,BACKEND,FRONTEND\" -c \"yellow,blue,magenta\" \"npm run dev -w packages/shared\" \"npm run dev -w apps/backend\" \"npm run dev -w apps/frontend\""
     },
     "devDependencies": {
-        "typescript": "^5.0.0",
+        "concurrently": "^9.2.1",
+        "eslint": "^8.0.0",
         "prettier": "^3.0.0",
-        "eslint": "^8.0.0"
+        "typescript": "^5.0.0"
     }
 }
