@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import CodeEditor from './components/CodeEditor.vue';
 import ReviewResults from './components/ReviewResults.vue';
-import { analyzeCode } from './api/client';
+import { analyzeCode, fetchModels } from './api/client';
 import { AnalyzeResponseDto } from '@prism/shared';
 
 const code = ref(`// Example Python code with a security issue
@@ -14,6 +14,19 @@ def get_user(user_id):
 const focus = ref<'security' | 'performance' | 'readability'>('security');
 const loading = ref(false);
 const result = ref<AnalyzeResponseDto | null>(null);
+const models = ref<string[]>([]);
+const selectedModel = ref<string>('');
+
+onMounted(async () => {
+  try {
+    models.value = await fetchModels();
+    if (models.value.length > 0) {
+      selectedModel.value = models.value[0];
+    }
+  } catch (err) {
+    console.error('Failed to load models', err);
+  }
+});
 
 const handleAnalyze = async () => {
   if (!code.value.trim()) return;
@@ -25,7 +38,8 @@ const handleAnalyze = async () => {
     result.value = await analyzeCode({
       code: code.value,
       focus: focus.value,
-      language: 'python' // Auto-detect for MVP hardcoded or simple heuristic later
+      language: 'python', // Auto-detect for MVP hardcoded or simple heuristic later
+      model: selectedModel.value
     });
   } catch (err) {
     console.error(err);
@@ -60,6 +74,17 @@ const handleAnalyze = async () => {
           >
             {{ f.charAt(0).toUpperCase() + f.slice(1) }}
           </button>
+        </div>
+
+        <!-- Model Selector -->
+        <div class="flex items-center space-x-2">
+          <label class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Model</label>
+          <select 
+            v-model="selectedModel"
+            class="bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-sm font-medium focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+          >
+            <option v-for="m in models" :key="m" :value="m">{{ m }}</option>
+          </select>
         </div>
       </div>
 

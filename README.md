@@ -8,7 +8,7 @@ Prism is a production-style educational project built to demonstrate the integra
 *   **Backend**: NestJS + TypeScript (Modular Architecture, DTOs, Validation)
 *   **Frontend**: Vue 3 + TypeScript + Vite + TailwindCSS
 *   **Shared**: Common DTOs and Types
-*   **AI Integration**: OpenAI API (with Adapter pattern)
+*   **AI Integration**: Google Gemini API (with rate limiting)
 *   **CI**: GitHub Actions
 
 ## Features (MVP)
@@ -44,18 +44,21 @@ prism/
 3.  **Configure Environment**
     Create `apps/backend/.env` (optional for simple usage, required for Real AI):
     ```env
-    OPENAI_API_KEY=your_key_here
+    GEMINI_API_KEY=your_key_here
     ```
     *If no key is provided, the system falls back to a Mock Provider for demonstration.*
 
-4.  **Run Development Servers**
+4.  **Rate Limiting**
+    To protect the Gemini free tier, the API is rate-limited to 5 requests per minute per IP.
+
+5.  **Run Development Servers**
     ```bash
     # Open two terminals:
     npm run dev -w apps/backend
     npm run dev -w apps/frontend
     ```
 
-5.  **Access App**
+6.  **Access App**
     Open `http://localhost:5173` (or port shown in terminal).
 
 ## Testing

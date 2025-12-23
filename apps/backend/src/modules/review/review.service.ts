@@ -9,4 +9,8 @@ export class ReviewService {
     async analyze(dto: AnalyzeRequestDto): Promise<AnalyzeResponseDto> {
         return this.llmService.analyzeCode(dto);
     }
+
+    async getModels(): Promise<string[]> {
+        return this.llmService.listModels();
+    }
 }
