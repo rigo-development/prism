@@ -3,7 +3,7 @@ import { ref } from 'vue';
 import CodeEditor from './components/CodeEditor.vue';
 import ReviewResults from './components/ReviewResults.vue';
 import { analyzeCode } from './api/client';
-import { AnalyzeResponseDto, ReviewIssue } from '@prism/shared';
+import { AnalyzeResponseDto } from '@prism/shared';
 
 const code = ref(`// Example Python code with a security issue
 def get_user(user_id):
