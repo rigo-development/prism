@@ -1,15 +1,23 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { AnalyzeRequestDto, AnalyzeResponseDto } from '@prism/shared';
-import axios from 'axios';
+import { GoogleGenerativeAI } from '@google/generative-ai';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class LlmService {
     private readonly logger = new Logger(LlmService.name);
-    private readonly apiKey = process.env.OPENAI_API_KEY;
+    private genAI: GoogleGenerativeAI | null = null;
+
+    constructor(private readonly configService: ConfigService) {
+        const apiKey = this.configService.get<string>('GEMINI_API_KEY');
+        if (apiKey) {
+            this.genAI = new GoogleGenerativeAI(apiKey);
+        }
+    }
 
     async analyzeCode(dto: AnalyzeRequestDto): Promise<AnalyzeResponseDto> {
-        if (!this.apiKey) {
-            this.logger.warn('No OPENAI_API_KEY found. Using Mock response.');
+        if (!this.genAI) {
+            this.logger.warn('No GEMINI_API_KEY found. Using Mock response.');
             return this.getMockResponse(dto);
         }
 
@@ -32,36 +40,29 @@ Return ONLY valid JSON matching this structure:
 }
 No markdown, no conversation. Just the JSON.`;
 
+            const model = this.genAI.getGenerativeModel({
+                model: 'gemini-1.5-flash-8b',
+                systemInstruction: systemPrompt,
+                generationConfig: {
+                    responseMimeType: "application/json",
+                }
+            });
+
             const userPrompt = `Code to review:\n\n${dto.code}`;
 
-            const response = await axios.post(
-                'https://api.openai.com/v1/chat/completions',
-                {
-                    model: 'gpt-3.5-turbo',
-                    messages: [
-                        { role: 'system', content: systemPrompt },
-                        { role: 'user', content: userPrompt },
-                    ],
-                    temperature: 0.2, // Low temp for structured output
-                },
-                {
-                    headers: {
-                        Authorization: `Bearer ${this.apiKey}`,
-                        'Content-Type': 'application/json',
-                    },
-                },
-            );
+            const result = await model.generateContent(userPrompt);
+            const response = result.response;
+            const content = response.text();
 
-            const content = response.data.choices[0].message.content;
-            // Simple parse, assuming the LLM obeys. In real prod, use Zod or similar to validate.
-            const result = JSON.parse(content);
+            // Parse the JSON response
+            const parsedResult = JSON.parse(content);
 
             return {
                 reviewId: this.generateId(),
-                ...result,
+                ...parsedResult,
             };
         } catch (error) {
-            this.logger.error('LLM Call failed', error);
+            this.logger.error('Gemini Call failed', error);
             return this.getMockResponse(dto);
         }
     }
@@ -71,13 +72,13 @@ No markdown, no conversation. Just the JSON.`;
             setTimeout(() => {
                 resolve({
                     reviewId: 'mock-' + this.generateId(),
-                    summary: `(MOCK) Analyzed ${dto.language || 'code'} for ${dto.focus}. No API Key provided.`,
+                    summary: `(MOCK) Analyzed ${dto.language || 'code'} for ${dto.focus}. No GEMINI_API_KEY or error.`,
                     score: 88,
                     issues: [
                         {
                             line: 2,
                             severity: 'warning',
-                            message: 'This is a mock issue. Configure OPENAI_API_KEY to see real results.',
+                            message: 'This is a mock issue. Configure GEMINI_API_KEY to see real results.',
                             suggestion: 'const real = true;'
                         }
                     ]
