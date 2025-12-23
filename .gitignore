@@ -9,7 +9,7 @@ coverage/
 
 # Generated type declaration files
 *.d.ts
-!packages/shared/src/**/*.d.ts
+!**/src/**/*.d.ts
 
 # TSC incremental build info
 *.tsbuildinfo
