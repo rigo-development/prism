@@ -2,16 +2,46 @@ import { Injectable, Logger } from '@nestjs/common';
 import { AnalyzeRequestDto, AnalyzeResponseDto } from '@prism/shared';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { ConfigService } from '@nestjs/config';
+import axios from 'axios';
 
 @Injectable()
 export class LlmService {
     private readonly logger = new Logger(LlmService.name);
     private genAI: GoogleGenerativeAI | null = null;
+    private readonly apiKey: string | undefined;
 
     constructor(private readonly configService: ConfigService) {
-        const apiKey = this.configService.get<string>('GEMINI_API_KEY');
-        if (apiKey) {
-            this.genAI = new GoogleGenerativeAI(apiKey);
+        this.apiKey = this.configService.get<string>('GEMINI_API_KEY');
+        if (this.apiKey) {
+            this.genAI = new GoogleGenerativeAI(this.apiKey);
+        }
+    }
+
+    async listModels(): Promise<string[]> {
+        if (!this.apiKey) {
+            return ['mock-model'];
+        }
+
+        try {
+            const response = await axios.get(
+                `https://generativelanguage.googleapis.com/v1beta/models?key=${this.apiKey}`
+            );
+
+            // Filter for models that support generateContent
+            const models = response.data.models
+                .filter((m: any) => m.supportedGenerationMethods.includes('generateContent'))
+                .map((m: any) => m.name.replace('models/', ''));
+
+            return models;
+        } catch (error) {
+            this.logger.error('Failed to list models from Gemini API', error);
+            // Fallback to a safe list if API fails
+            return [
+                'gemini-1.5-flash',
+                'gemini-1.5-flash-8b',
+                'gemini-1.5-pro',
+                'gemini-2.0-flash-exp'
+            ];
         }
     }
 
@@ -22,7 +52,10 @@ export class LlmService {
         }
 
         try {
-            const systemPrompt = `
+            const modelName = dto.model || 'gemini-1.5-flash-8b';
+            const model = this.genAI.getGenerativeModel({
+                model: modelName,
+                systemInstruction: `
 You are Prism, an elite code review AI.
 Your goal is to review the code with a focus on: ${dto.focus.toUpperCase()}.
 Return ONLY valid JSON matching this structure:
@@ -38,11 +71,7 @@ Return ONLY valid JSON matching this structure:
     }
   ]
 }
-No markdown, no conversation. Just the JSON.`;
-
-            const model = this.genAI.getGenerativeModel({
-                model: 'gemini-1.5-flash-8b',
-                systemInstruction: systemPrompt,
+No markdown, no conversation. Just the JSON.`,
                 generationConfig: {
                     responseMimeType: "application/json",
                 }

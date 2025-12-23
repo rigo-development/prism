@@ -2,6 +2,7 @@ export class AnalyzeRequestDto {
     code!: string;
     language?: string;
     focus!: 'security' | 'performance' | 'readability' | 'bugs';
+    model?: string;
 }
 
 export class AnalyzeResponseDto {

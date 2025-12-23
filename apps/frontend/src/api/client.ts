@@ -17,3 +17,11 @@ export async function analyzeCode(data: AnalyzeRequestDto): Promise<AnalyzeRespo
 
     return response.json();
 }
+
+export async function fetchModels(): Promise<string[]> {
+    const response = await fetch(`${API_URL}/review/models`);
+    if (!response.ok) {
+        throw new Error('Failed to fetch models');
+    }
+    return response.json();
+}
