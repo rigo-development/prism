@@ -2,37 +2,33 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { NestExpressApplication } from '@nestjs/platform-express';
-import { Express } from 'express';
 
-let cachedApp: Express;
+async function bootstrap() {
+    const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
-async function bootstrap(): Promise<Express> {
-    if (!cachedApp) {
-        const app = await NestFactory.create<NestExpressApplication>(AppModule);
+    app.set('trust proxy', 1);
+    app.enableCors();
+    app.setGlobalPrefix('api/v1');
+    app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
-        app.set('trust proxy', 1);
-        app.enableCors();
-        app.setGlobalPrefix('api/v1');
-        app.useGlobalPipes(new ValidationPipe({ transform: true }));
-
-        await app.init();
-        cachedApp = app.getHttpAdapter().getInstance();
-    }
-    return cachedApp;
+    await app.init();
+    return app.getHttpAdapter().getInstance();
 }
 
-// Export the handler for Vercel
+let handler: any;
+
 export default async (req: any, res: any) => {
-    const app = await bootstrap();
-    return app(req, res);
+    if (!handler) {
+        handler = await bootstrap();
+    }
+    return handler(req, res);
 };
 
-// For local development
-if (process.env.NODE_ENV !== 'production') {
-    bootstrap().then(expressApp => {
-        const port = process.env.PORT || 3000;
-        expressApp.listen(port, () => {
-            console.log(`Application is running on: http://localhost:${port}/api/v1`);
+// Start for local dev
+if (process.env.NODE_ENV !== 'production' && !process.env.VERCEL) {
+    bootstrap().then(app => {
+        app.listen(3000, () => {
+            console.log('Server running locally on http://localhost:3000');
         });
     });
 }
