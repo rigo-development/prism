@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ReviewModule } from './modules/review/review.module';
-import { HealthController } from './health.controller';
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
+import { HealthModule } from './modules/health/health.module';
 
 @Module({
     imports: [
@@ -15,8 +15,8 @@ import { APP_GUARD } from '@nestjs/core';
             limit: 5,
         }]),
         ReviewModule,
+        HealthModule,
     ],
-    controllers: [HealthController],
     providers: [
         {
             provide: APP_GUARD,
