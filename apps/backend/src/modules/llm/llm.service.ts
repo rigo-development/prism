@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { AnalyzeRequestDto, AnalyzeResponseDto } from '@prism/shared';
+import { AnalyzeRequestDto, AnalyzeResponseDto } from '../../../../../packages/shared/src';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { ConfigService } from '@nestjs/config';
 import axios from 'axios';

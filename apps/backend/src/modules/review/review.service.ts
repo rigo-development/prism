@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { LlmService } from '../llm/llm.service';
-import { AnalyzeRequestDto, AnalyzeResponseDto } from '@prism/shared';
+import { AnalyzeRequestDto, AnalyzeResponseDto } from '../../../../../packages/shared/src';
 
 @Injectable()
 export class ReviewService {

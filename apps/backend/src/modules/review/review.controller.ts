@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { ReviewService } from './review.service';
-import { AnalyzeRequestDto, AnalyzeResponseDto } from '@prism/shared';
+import { AnalyzeRequestDto, AnalyzeResponseDto } from '../../../../../packages/shared/src';
 
 @Controller('review')
 export class ReviewController {
