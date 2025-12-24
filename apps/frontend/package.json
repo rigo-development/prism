@@ -9,17 +9,17 @@
         "preview": "vite preview"
     },
     "dependencies": {
-        "vue": "^3.5.13",
-        "@prism/shared": "*"
+        "@prism/shared": "*",
+        "vue": "^3.5.26"
     },
     "devDependencies": {
-        "@vitejs/plugin-vue": "^5.2.1",
-        "@vue/tsconfig": "^0.7.0",
-        "autoprefixer": "^10.4.20",
-        "postcss": "^8.4.49",
+        "@vitejs/plugin-vue": "^6.0.3",
+        "@vue/tsconfig": "^0.8.1",
+        "autoprefixer": "^10.4.23",
+        "postcss": "^8.5.6",
         "tailwindcss": "^3.4.17",
-        "typescript": "~5.6.2",
-        "vite": "^6.0.5",
-        "vue-tsc": "^2.2.0"
+        "typescript": "~5.9.3",
+        "vite": "^7.3.0",
+        "vue-tsc": "^3.2.1"
     }
 }
