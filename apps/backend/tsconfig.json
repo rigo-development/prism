@@ -10,6 +10,11 @@
         "sourceMap": true,
         "outDir": "./dist",
         "baseUrl": "./",
+        "paths": {
+            "@prism/shared": [
+                "../../packages/shared/src/index.ts"
+            ]
+        },
         "incremental": true,
         "skipLibCheck": true,
         "strictNullChecks": false,
@@ -17,5 +22,9 @@
         "strictBindCallApply": false,
         "forceConsistentCasingInFileNames": false,
         "noFallthroughCasesInSwitch": false
-    }
+    },
+    "include": [
+        "src/**/*",
+        "../../packages/shared/src/**/*"
+    ]
 }
