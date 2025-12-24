@@ -3,6 +3,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { NestExpressApplication } from '@nestjs/platform-express';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 let cachedApp: any;
 
@@ -12,6 +13,17 @@ async function bootstrap() {
         app.setGlobalPrefix('api/v1');
         app.enableCors();
         app.useGlobalPipes(new ValidationPipe({ transform: true }));
+
+        // Swagger setup
+        const config = new DocumentBuilder()
+            .setTitle('Prism AI API')
+            .setDescription('API for analyzing code using Google Gemini AI')
+            .setVersion('1.0')
+            .addTag('review')
+            .build();
+        const document = SwaggerModule.createDocument(app, config);
+        SwaggerModule.setup('docs', app, document);
+
         await app.init();
         cachedApp = app.getHttpAdapter().getInstance();
     }
