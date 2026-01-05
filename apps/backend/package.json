@@ -9,7 +9,9 @@
         "start:debug": "nest start --debug --watch",
         "start:prod": "node dist/main",
         "test": "jest",
-        "test:e2e": "jest --config ./test/jest-e2e.json"
+        "test:e2e": "jest --config ./test/jest-e2e.json",
+        "db:init": "prisma migrate dev",
+        "db:generate": "prisma generate"
     },
     "dependencies": {
         "@google/generative-ai": "^0.24.1",
