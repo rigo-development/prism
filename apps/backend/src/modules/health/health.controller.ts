@@ -1,6 +1,6 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { ApiTags, ApiOperation } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { PrismaService } from '../../prisma/prisma.service';
 
 @ApiTags('health')
@@ -12,7 +12,8 @@ export class HealthController {
     ) { }
 
     @Get()
-    @ApiOperation({ summary: 'Welcome message and API status' })
+    @ApiOperation({ summary: 'Welcome message and API status', description: 'Returns a simple welcome message and basic API metadata.' })
+    @ApiResponse({ status: 200, description: 'API is alive and welcoming' })
     welcome() {
         return {
             message: 'Prism AI Code Review API is running',
@@ -23,7 +24,8 @@ export class HealthController {
     }
 
     @Get('health')
-    @ApiOperation({ summary: 'Health check and configuration status' })
+    @ApiOperation({ summary: 'Health check and configuration status', description: 'Provides detailed health information including database connection status and environment configuration.' })
+    @ApiResponse({ status: 200, description: 'Health statistics retrieved' })
     async check(@Query('ping') ping?: string) {
         const url = process.env.PRISMA_DATABASE_URL ||
             process.env.POSTGRES_PRISMA_URL ||
