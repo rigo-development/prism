@@ -1,7 +1,6 @@
 // This is your production Prisma schema file (Postgres)
 generator client {
   provider = "prisma-client-js"
-  output   = "../src/generated/client"
 }
 
 datasource db {
@@ -12,6 +11,7 @@ datasource db {
 
 model Review {
   id        String   @id @default(uuid())
+  sessionId String?
   code      String
   language  String   @default("plaintext")
   focus     String

@@ -1,26 +1,26 @@
 import { Injectable, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
-import { PrismaClient } from '../generated/client';
+import { PrismaClient } from '@prisma/client';
 import * as path from 'node:path';
 
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleInit, OnModuleDestroy {
-    constructor() {
-        const url = process.env.PRISMA_DATABASE_URL ||
-            process.env.POSTGRES_PRISMA_URL ||
-            process.env.DATABASE_URL;
+    public readonly isPostgres: boolean;
 
-        const isPostgres = url && !url.startsWith('file:') && !url.includes('dev.db');
+    constructor() {
+        const pgUrl = process.env.PRISMA_DATABASE_URL || process.env.POSTGRES_PRISMA_URL;
+        const dbUrl = process.env.DATABASE_URL;
+
+        // Local Dev: Always force SQLite unless we are actually on Vercel
+        const isPg = !!process.env.VERCEL;
         let finalUrl: string;
 
-        if (isPostgres) {
-            finalUrl = url!;
+        if (isPg) {
+            finalUrl = pgUrl || dbUrl!;
         } else {
-            // Local SQLite setup
-            const dbPath = path.join(process.cwd(), 'prisma/dev.db');
-            finalUrl = `file:${dbPath}`;
+            const localPath = path.join(process.cwd(), 'prisma/dev.db');
+            finalUrl = dbUrl && dbUrl.startsWith('file:') ? dbUrl : `file:${localPath}`;
+            process.env.DATABASE_URL = finalUrl;
         }
-
-        console.log(`[Prisma] Initialized in ${isPostgres ? 'POSTGRES' : 'SQLITE'} mode`);
 
         super({
             datasources: {
@@ -29,6 +29,9 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
                 },
             },
         });
+
+        this.isPostgres = isPg;
+        console.log(`[Prisma] Initialized in ${this.isPostgres ? 'POSTGRES' : 'SQLITE'} mode`);
     }
 
     async onModuleInit() {

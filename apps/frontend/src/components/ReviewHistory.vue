@@ -16,7 +16,7 @@ const props = defineProps<{
   loading: boolean;
 }>();
 
-const emit = defineEmits(['select']);
+const emit = defineEmits(['select', 'clear']);
 
 const formatDate = (dateStr: string) => {
   const date = new Date(dateStr);
@@ -32,10 +32,17 @@ const getScoreColor = (score: number) => {
 
 <template>
   <div class="flex flex-col h-full bg-slate-900 overflow-hidden">
-    <div class="p-4 border-b border-slate-700">
-      <h2 class="text-sm font-bold text-slate-400 uppercase tracking-widest flex items-center">
-        <span class="mr-2">🕒</span> Review History
+    <div class="p-4 border-b border-slate-700 flex items-center justify-between">
+      <h2 class="text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center">
+        <span class="mr-2">🕒</span> History
       </h2>
+      <button 
+        v-if="history.length > 0"
+        @click="emit('clear')"
+        class="text-[10px] font-bold text-slate-500 hover:text-red-400 transition-colors uppercase tracking-tighter"
+      >
+        Clear All
+      </button>
     </div>
 
     <div class="flex-1 overflow-y-auto custom-scrollbar p-2">

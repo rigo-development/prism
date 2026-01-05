@@ -1,7 +1,6 @@
 // This is your local development Prisma schema file (SQLite)
 generator client {
   provider = "prisma-client-js"
-  output   = "../src/generated/client"
 }
 
 datasource db {
@@ -11,6 +10,7 @@ datasource db {
 
 model Review {
   id        String   @id @default(uuid())
+  sessionId String?
   code      String
   language  String   @default("plaintext")
   focus     String

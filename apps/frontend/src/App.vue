@@ -3,7 +3,7 @@ import { onMounted, ref } from 'vue';
 import CodeEditor from './components/CodeEditor.vue';
 import ReviewResults from './components/ReviewResults.vue';
 import ReviewHistory from './components/ReviewHistory.vue';
-import { analyzeCode, fetchModels, fetchHistory } from './api/client';
+import { analyzeCode, fetchModels, fetchHistory, clearHistory } from './api/client';
 
 const code = ref(`// Example Python code with a security issue
 def get_user(user_id):
@@ -75,6 +75,16 @@ const handleAnalyze = async () => {
     alert('Analysis failed. Please try again.');
   } finally {
     loading.value = false;
+  }
+};
+
+const handleClearHistory = async () => {
+  if (!confirm('Are you sure you want to clear your local history?')) return;
+  try {
+    await clearHistory();
+    history.value = [];
+  } catch (err) {
+    console.error('Failed to clear history', err);
   }
 };
 
@@ -180,6 +190,7 @@ const handleHistorySelect = (item: any) => {
             :history="history" 
             :loading="historyLoading"
             @select="handleHistorySelect"
+            @clear="handleClearHistory"
           />
         </div>
       </transition>
