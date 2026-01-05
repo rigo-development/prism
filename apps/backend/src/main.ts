@@ -1,4 +1,20 @@
 import 'reflect-metadata';
+import * as dotenv from 'dotenv';
+import * as path from 'node:path';
+import * as fs from 'node:fs';
+
+// Force load environment variables early for local development/monorepo support
+const envPath = path.resolve(__dirname, '../.env');
+const rootEnvPath = path.resolve(process.cwd(), 'apps/backend/.env');
+
+if (fs.existsSync(envPath)) {
+    dotenv.config({ path: envPath });
+} else if (fs.existsSync(rootEnvPath)) {
+    dotenv.config({ path: rootEnvPath });
+} else {
+    dotenv.config();
+}
+
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';

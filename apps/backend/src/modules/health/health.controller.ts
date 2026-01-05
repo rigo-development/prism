@@ -25,12 +25,13 @@ export class HealthController {
     @Get('health')
     @ApiOperation({ summary: 'Health check and configuration status' })
     async check(@Query('ping') ping?: string) {
-        const url = process.env.POSTGRES_PRISMA_URL ||
-            process.env.DATABASE_URL ||
-            process.env.PRISMA_DATABASE_URL;
+        const url = process.env.PRISMA_DATABASE_URL ||
+            process.env.POSTGRES_PRISMA_URL ||
+            process.env.DATABASE_URL;
 
         let dbStatus = url ? 'configured' : 'not_configured';
-        let dbType = url && !url.startsWith('file:') ? 'postgres' : 'sqlite';
+        const isPostgres = url && !url.startsWith('file:') && !url.includes('dev.db');
+        let dbType = isPostgres ? 'postgres' : 'sqlite';
 
         // Only perform active ping if explicitly requested to save free-tier resources
         if (ping === 'true' && url) {

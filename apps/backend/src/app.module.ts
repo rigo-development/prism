@@ -10,6 +10,7 @@ import { PrismaModule } from './prisma/prisma.module';
     imports: [
         ConfigModule.forRoot({
             isGlobal: true,
+            envFilePath: ['.env.local', '.env', 'apps/backend/.env'],
         }),
         ThrottlerModule.forRoot([{
             ttl: 60000,

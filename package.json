@@ -12,7 +12,11 @@
         "test:e2e": "npm run test:e2e -w apps/backend",
         "db:init": "npm run db:init -w apps/backend",
         "db:generate": "npm run db:generate -w apps/backend",
-        "setup": "npm install && npm run build --workspaces && npm run db:generate && npm run db:init",
+        "db:prod:sync": "npm run db:prod:sync -w apps/backend",
+        "db:local:sync": "npm run db:generate && npm run db:init",
+        "setup:local": "npm install && npm run build --workspaces && npm run db:local:sync",
+        "setup:postgres": "npm install && npm run build --workspaces && npm run db:prod:sync",
+        "setup": "npm run setup:local",
         "vercel-build": "npx prisma generate --schema=apps/backend/prisma/schema.prisma && npx prisma db push --schema=apps/backend/prisma/schema.prisma --accept-data-loss && npm run build --workspaces",
         "dev": "concurrently -n \"SHARED,BACKEND,FRONTEND\" -c \"yellow,blue,magenta\" \"npm run dev -w packages/shared\" \"npm run dev -w apps/backend\" \"npm run dev -w apps/frontend\""
     },

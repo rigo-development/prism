@@ -31,43 +31,57 @@ prism/
 │   └── shared/         # Shared Types/DTOs
 ```
 
-## Getting Started
+## Local Development Setup
 
-1.  **Install Dependencies**
+Prism allows you to test both local and production environments seamlessly.
+
+### Mode 1: Local SQLite (Default)
+Ideal for standard development without external dependencies.
+1.  **Initialize**:
     ```bash
-    npm install
+    npm run setup:local
     ```
-
-2.  **Build Shared Library**
-    ```bash
-    npm run build -w packages/shared
-    ```
-
-3.  **Configure Environment**
-    Create `apps/backend/.env` (optional for simple usage, required for Real AI):
-    ```env
-    GEMINI_API_KEY=your_key_here
-    ```
-    *If no key is provided, the system falls back to a Mock Provider for demonstration.*
-
-4.  **Rate Limiting**
-    To protect the Gemini free tier, the API is rate-limited to 5 requests per minute per IP.
-
-5.  **Setup & Database Initialization**
-    ```bash
-    npm run setup
-    ```
-    *This installs dependencies, builds shared packages, and initializes the local SQLite database.*
-
-6.  **Run Development Servers**
+2.  **Run**:
     ```bash
     npm run dev
     ```
 
-7.  **Access App**
-    *   Frontend: `http://localhost:5173`
-    *   Backend API: `http://localhost:3000`
-    *   Swagger Docs: `http://localhost:3000/api`
+### Mode 2: Vercel Postgres (Production Sync)
+Use this to test your cloud database locally.
+1.  **Configure Environment**:
+    Add your Vercel/Neon connection string to `apps/backend/.env`:
+    ```env
+    PRISMA_DATABASE_URL="postgres://user:pass@host/db?sslmode=require"
+    ```
+2.  **Initialize**:
+    ```bash
+    npm run setup:postgres
+    ```
+3.  **Run**:
+    ```bash
+    npm run dev
+    ```
+
+### Switching Environments
+If you already have the project set up and just want to toggle:
+*   Switch to **SQLite**: `npm run db:local:sync`
+*   Switch to **Postgres**: `npm run db:prod:sync`
+
+## Vercel Deployment
+
+This project is optimized for a zero-config deployment on Vercel:
+1.  **Framework**: Select `NestJS` for the backend and `Vite` for the frontend.
+2.  **Build Command**: The root `package.json` includes `vercel-build`, which Vercel will use to:
+    *   Initialize the Postgres Prisma Client.
+    *   Automatically push schema changes to your Vercel Postgres instance.
+    *   Build the monorepo.
+3.  **Environment Variables**:
+    *   Ensure `PRISMA_DATABASE_URL` (or `POSTGRES_PRISMA_URL`) is set.
+    *   Set `GEMINI_API_KEY` in settings.
+
+## Health & Status Check
+Visit `http://localhost:3000/api/v1/health` to see your system status.
+*   Append `?ping=true` to verify the live database connection (passive by default).
 
 ## Docker Support (Recommended)
 Run the entire stack with one command:
@@ -75,6 +89,7 @@ Run the entire stack with one command:
 docker-compose up --build
 ```
 Access Frontend at `http://localhost:8080` and Backend at `http://localhost:3000`.
+
 
 ## Testing
 
