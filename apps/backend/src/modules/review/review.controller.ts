@@ -17,7 +17,7 @@ export class ReviewController {
 
     @Post('analyze')
     @ApiOperation({ summary: 'Analyze code for issues' })
-    @ApiResponse({ status: 201, description: 'Analysis results' })
+    @ApiResponse({ status: 201, description: 'Analysis results', type: AnalyzeResponseDto })
     async analyze(@Body() dto: AnalyzeRequestDto): Promise<AnalyzeResponseDto> {
         return this.reviewService.analyze(dto);
     }

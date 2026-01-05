@@ -52,7 +52,7 @@ export class LlmService {
         }
 
         try {
-            const modelName = dto.model || 'gemini-1.5-flash-8b';
+            const modelName = dto.model || 'gemini-1.5-flash';
             const model = this.genAI.getGenerativeModel({
                 model: modelName,
                 systemInstruction: `

@@ -6,10 +6,12 @@ Prism is a production-style educational project built to demonstrate the integra
 
 *   **Monorepo**: NPM Workspaces
 *   **Backend**: NestJS + TypeScript (Modular Architecture, DTOs, Validation)
+*   **Database**: SQLite + Prisma ORM
 *   **Frontend**: Vue 3 + TypeScript + Vite + TailwindCSS
 *   **Shared**: Common DTOs and Types
 *   **AI Integration**: Google Gemini API (with rate limiting)
-*   **CI**: GitHub Actions
+*   **DevOps**: Docker, GitHub Actions CI
+*   **AI Development**: See [AGENTS.md](./AGENTS.md)
 
 ## Features (MVP)
 
@@ -60,6 +62,13 @@ prism/
 
 6.  **Access App**
     Open `http://localhost:5173` (or port shown in terminal).
+
+## Docker Support (Recommended)
+Run the entire stack with one command:
+```bash
+docker-compose up --build
+```
+Access Frontend at `http://localhost:8080` and Backend at `http://localhost:3000`.
 
 ## Testing
 

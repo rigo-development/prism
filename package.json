@@ -9,6 +9,7 @@
     "scripts": {
         "build": "npm run build --workspaces",
         "test": "npm run test --workspaces",
+        "test:e2e": "npm run test:e2e -w apps/backend",
         "dev": "concurrently -n \"SHARED,BACKEND,FRONTEND\" -c \"yellow,blue,magenta\" \"npm run dev -w packages/shared\" \"npm run dev -w apps/backend\" \"npm run dev -w apps/frontend\""
     },
     "devDependencies": {

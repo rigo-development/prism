@@ -25,8 +25,14 @@ jobs:
     - name: Build Shared
       run: npm run build -w packages/shared
       
-    - name: Test Backend
+    - name: Test Backend Unit
       run: npm run test -w apps/backend
+      
+    - name: Test Backend E2E
+      run: npm run test:e2e -w apps/backend
+
+    - name: Test Frontend
+      run: npm run test -w apps/frontend
       
     - name: Build Backend
       run: npm run build -w apps/backend
