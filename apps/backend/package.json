@@ -10,8 +10,8 @@
         "start:prod": "node dist/main",
         "test": "jest",
         "test:e2e": "jest --config ./test/jest-e2e.json",
-        "db:init": "prisma migrate dev",
-        "db:generate": "prisma generate"
+        "db:init": "prisma db push --schema=prisma/schema.sqlite.prisma",
+        "db:generate": "prisma generate --schema=prisma/schema.sqlite.prisma"
     },
     "dependencies": {
         "@google/generative-ai": "^0.24.1",

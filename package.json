@@ -13,6 +13,7 @@
         "db:init": "npm run db:init -w apps/backend",
         "db:generate": "npm run db:generate -w apps/backend",
         "setup": "npm install && npm run build --workspaces && npm run db:generate && npm run db:init",
+        "vercel-build": "npx prisma generate --schema=apps/backend/prisma/schema.prisma && npx prisma db push --schema=apps/backend/prisma/schema.prisma --accept-data-loss && npm run build --workspaces",
         "dev": "concurrently -n \"SHARED,BACKEND,FRONTEND\" -c \"yellow,blue,magenta\" \"npm run dev -w packages/shared\" \"npm run dev -w apps/backend\" \"npm run dev -w apps/frontend\""
     },
     "devDependencies": {
