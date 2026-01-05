@@ -25,6 +25,9 @@ jobs:
     - name: Build Shared
       run: npm run build -w packages/shared
       
+    - name: Generate Prisma Client
+      run: npm run db:generate -w apps/backend
+      
     - name: Test Backend Unit
       run: npm run test -w apps/backend
       

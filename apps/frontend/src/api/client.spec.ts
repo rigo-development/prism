@@ -25,6 +25,9 @@ describe('API Client', () => {
             expect.stringContaining('/review/analyze'),
             expect.objectContaining({
                 method: 'POST',
+                headers: expect.objectContaining({
+                    'x-session-id': expect.any(String)
+                }),
                 body: expect.stringContaining('readability')
             })
         );

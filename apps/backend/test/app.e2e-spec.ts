@@ -2,6 +2,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from '../src/app.module';
+import { LlmService } from '../src/modules/llm/llm.service';
+import { PrismaService } from '../src/prisma/prisma.service';
 
 describe('AppController (e2e)', () => {
     let app: INestApplication;
@@ -9,7 +11,29 @@ describe('AppController (e2e)', () => {
     beforeAll(async () => {
         const moduleFixture: TestingModule = await Test.createTestingModule({
             imports: [AppModule],
-        }).compile();
+        })
+            .overrideProvider(LlmService)
+            .useValue({
+                listModels: jest.fn().mockResolvedValue(['mock-model']),
+                analyzeCode: jest.fn().mockResolvedValue({
+                    summary: 'Mock E2E Summary',
+                    score: 95,
+                    detectedLanguage: 'typescript',
+                    issues: []
+                }),
+            })
+            .overrideProvider(PrismaService)
+            .useValue({
+                review: {
+                    create: jest.fn().mockResolvedValue({ id: 'mock-e2e-id' }),
+                    findMany: jest.fn().mockResolvedValue([]),
+                    deleteMany: jest.fn().mockResolvedValue({ count: 0 }),
+                },
+                isPostgres: false,
+                onModuleInit: jest.fn(),
+                onModuleDestroy: jest.fn(),
+            })
+            .compile();
 
         app = moduleFixture.createNestApplication();
         await app.init();
