@@ -4,11 +4,13 @@ import { ReviewModule } from './modules/review/review.module';
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 import { HealthModule } from './modules/health/health.module';
+import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
     imports: [
         ConfigModule.forRoot({
             isGlobal: true,
+            envFilePath: ['.env.local', '.env', 'apps/backend/.env'],
         }),
         ThrottlerModule.forRoot([{
             ttl: 60000,
@@ -16,6 +18,7 @@ import { HealthModule } from './modules/health/health.module';
         }]),
         ReviewModule,
         HealthModule,
+        PrismaModule,
     ],
     providers: [
         {

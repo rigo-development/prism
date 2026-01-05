@@ -1,0 +1,19 @@
+// This is your local development Prisma schema file (SQLite)
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Review {
+  id        String   @id @default(uuid())
+  sessionId String?
+  code      String
+  language  String   @default("plaintext")
+  focus     String
+  feedback  String
+  createdAt DateTime @default(now())
+}
