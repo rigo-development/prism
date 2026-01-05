@@ -61,7 +61,7 @@ export class AnalyzeResponseDto {
     @ApiProperty({ description: 'Overall code quality score (0-100)', example: 85 })
     score!: number;
 
-    @ApiProperty({ description: 'List of detected issues', type: [ReviewIssue] })
+    @ApiProperty({ description: 'List of detected issues', type: () => [ReviewIssue] })
     issues!: ReviewIssue[];
 
     @ApiProperty({ description: 'The language detected by the AI', example: 'typescript', required: false })

@@ -3,8 +3,10 @@
 import "dotenv/config";
 import { defineConfig } from "prisma/config";
 
+const schemaPath = process.env.VERCEL || process.env.PRISMA_DATABASE_URL ? "prisma/schema.prisma" : "prisma/schema.sqlite.prisma";
+
 export default defineConfig({
-  schema: "prisma/schema.sqlite.prisma",
+  schema: schemaPath,
   migrations: {
     path: "prisma/migrations",
   },

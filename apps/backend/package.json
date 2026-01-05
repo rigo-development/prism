@@ -12,7 +12,8 @@
         "test:e2e": "jest --config ./test/jest-e2e.json",
         "db:init": "prisma db push --schema=prisma/schema.sqlite.prisma",
         "db:generate": "prisma generate --schema=prisma/schema.sqlite.prisma",
-        "db:prod:sync": "prisma generate --schema=prisma/schema.prisma && prisma db push --schema=prisma/schema.prisma"
+        "db:prod:sync": "prisma generate --schema=prisma/schema.prisma && prisma db push --schema=prisma/schema.prisma",
+        "postinstall": "prisma generate"
     },
     "dependencies": {
         "@google/generative-ai": "^0.24.1",

@@ -7,18 +7,26 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
     public readonly isPostgres: boolean;
 
     constructor() {
-        const pgUrl = process.env.PRISMA_DATABASE_URL || process.env.POSTGRES_PRISMA_URL;
+        // Fallback chain for Postgres URLs (common in Vercel/Neon/Supabase)
+        const pgUrl = process.env.PRISMA_DATABASE_URL ||
+            process.env.POSTGRES_PRISMA_URL ||
+            process.env.POSTGRES_URL;
+
         const dbUrl = process.env.DATABASE_URL;
 
-        // Local Dev: Always force SQLite unless we are actually on Vercel
-        const isPg = !!process.env.VERCEL;
-        let finalUrl: string;
+        // Local Dev fallback: If not on Vercel, we might still want to use Postgres if pgUrl is set
+        const isPg = !!(process.env.VERCEL || (pgUrl && pgUrl.startsWith('postgres')));
+        let finalUrl: string = '';
 
         if (isPg) {
-            finalUrl = pgUrl || dbUrl!;
+            finalUrl = pgUrl || dbUrl || '';
+            if (!finalUrl && process.env.VERCEL) {
+                console.error('[Prisma] ERROR: Running on Vercel but no database URL found (PRISMA_DATABASE_URL, POSTGRES_PRISMA_URL, or DATABASE_URL).');
+            }
         } else {
             const localPath = path.join(process.cwd(), 'prisma/dev.db');
             finalUrl = dbUrl && dbUrl.startsWith('file:') ? dbUrl : `file:${localPath}`;
+            // Force it for the engine
             process.env.DATABASE_URL = finalUrl;
         }
 
@@ -31,11 +39,16 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
         });
 
         this.isPostgres = isPg;
-        console.log(`[Prisma] Initialized in ${this.isPostgres ? 'POSTGRES' : 'SQLITE'} mode`);
+        console.log(`[Prisma] Mode: ${this.isPostgres ? 'POSTGRES' : 'SQLITE'}`);
+        if (finalUrl) {
+            console.log(`[Prisma] URL Target: ${finalUrl.split('@').pop()?.split('?')[0]}`);
+        }
     }
 
     async onModuleInit() {
-        await this.$connect();
+        await this.$connect().catch(err => {
+            console.error('[Prisma] Error connecting to database during initialization:', err.message);
+        });
     }
 
     async onModuleDestroy() {
