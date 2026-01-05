@@ -8,6 +8,7 @@ interface Props {
   score: number | null;
   summary: string | null;
   issues: ReviewIssue[];
+  detectedLanguage?: string | null;
 }
 
 defineProps<Props>();
@@ -23,7 +24,14 @@ defineProps<Props>();
       <!-- Header -->
       <div class="p-6 border-b border-slate-700 bg-slate-800/50">
         <div class="flex items-center justify-between mb-4">
-          <h2 class="text-xl font-bold text-white">Review Results</h2>
+          <div class="flex flex-col">
+            <h2 class="text-xl font-bold text-white">Review Results</h2>
+            <div v-if="detectedLanguage" class="mt-1">
+              <span class="text-[10px] px-1.5 py-0.5 rounded bg-blue-900/30 text-blue-400 border border-blue-800/50 font-bold uppercase tracking-wider">
+                Detected: {{ detectedLanguage }}
+              </span>
+            </div>
+          </div>
           <div class="flex items-center space-x-2">
             <span class="text-sm text-slate-400">Quality Score:</span>
             <span 

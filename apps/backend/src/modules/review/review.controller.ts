@@ -21,4 +21,11 @@ export class ReviewController {
     async analyze(@Body() dto: AnalyzeRequestDto): Promise<AnalyzeResponseDto> {
         return this.reviewService.analyze(dto);
     }
+
+    @Get('history')
+    @ApiOperation({ summary: 'Get recent review history' })
+    @ApiResponse({ status: 200, description: 'List of recent reviews' })
+    async getHistory() {
+        return this.reviewService.getHistory();
+    }
 }

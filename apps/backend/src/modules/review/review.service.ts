@@ -17,7 +17,7 @@ export class ReviewService {
         const savedReview = await this.prisma.review.create({
             data: {
                 code: dto.code,
-                language: dto.language || 'plaintext',
+                language: result.detectedLanguage || dto.language || 'plaintext',
                 focus: dto.focus,
                 feedback: JSON.stringify(result),
             }
@@ -31,5 +31,32 @@ export class ReviewService {
 
     async getModels(): Promise<string[]> {
         return this.llmService.listModels();
+    }
+
+    async getHistory(limit: number = 10): Promise<any[]> {
+        const reviews = await this.prisma.review.findMany({
+            take: limit,
+            orderBy: {
+                createdAt: 'desc',
+            },
+        });
+
+        return reviews.map(r => {
+            let feedback;
+            try {
+                feedback = JSON.parse(r.feedback);
+            } catch (e) {
+                feedback = { summary: 'Error parsing feedback', score: 0 };
+            }
+
+            return {
+                id: r.id,
+                code: r.code,
+                language: r.language,
+                focus: r.focus,
+                ...feedback,
+                createdAt: r.createdAt,
+            };
+        });
     }
 }

@@ -25,3 +25,11 @@ export async function fetchModels(): Promise<string[]> {
     }
     return response.json();
 }
+
+export async function fetchHistory(): Promise<any[]> {
+    const response = await fetch(`${API_URL}/review/history`);
+    if (!response.ok) {
+        throw new Error('Failed to fetch history');
+    }
+    return response.json();
+}

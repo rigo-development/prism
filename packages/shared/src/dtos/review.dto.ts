@@ -10,6 +10,7 @@ export class AnalyzeResponseDto {
     summary!: string;
     score!: number;
     issues!: ReviewIssue[];
+    detectedLanguage?: string;
 }
 
 export class ReviewIssue {
@@ -17,4 +18,14 @@ export class ReviewIssue {
     severity!: 'info' | 'warning' | 'critical';
     message!: string;
     suggestion?: string;
+}
+
+export class HistoryItemDto {
+    id!: string;
+    code!: string;
+    language!: string;
+    focus!: string;
+    summary!: string;
+    score!: number;
+    createdAt!: Date;
 }

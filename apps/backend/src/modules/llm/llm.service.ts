@@ -62,6 +62,7 @@ Return ONLY valid JSON matching this structure:
 {
   "summary": "Brief high-level summary",
   "score": number (0-100),
+  "detectedLanguage": "string (detected programming language)",
   "issues": [
     {
       "line": number,
@@ -103,6 +104,7 @@ No markdown, no conversation. Just the JSON.`,
                     reviewId: 'mock-' + this.generateId(),
                     summary: `(MOCK) Analyzed ${dto.language || 'code'} for ${dto.focus}. No GEMINI_API_KEY or error.`,
                     score: 88,
+                    detectedLanguage: dto.language || 'typescript',
                     issues: [
                         {
                             line: 2,
