@@ -53,15 +53,21 @@ prism/
 4.  **Rate Limiting**
     To protect the Gemini free tier, the API is rate-limited to 5 requests per minute per IP.
 
-5.  **Run Development Servers**
+5.  **Setup & Database Initialization**
     ```bash
-    # Open two terminals:
-    npm run dev -w apps/backend
-    npm run dev -w apps/frontend
+    npm run setup
+    ```
+    *This installs dependencies, builds shared packages, and initializes the local SQLite database.*
+
+6.  **Run Development Servers**
+    ```bash
+    npm run dev
     ```
 
-6.  **Access App**
-    Open `http://localhost:5173` (or port shown in terminal).
+7.  **Access App**
+    *   Frontend: `http://localhost:5173`
+    *   Backend API: `http://localhost:3000`
+    *   Swagger Docs: `http://localhost:3000/api`
 
 ## Docker Support (Recommended)
 Run the entire stack with one command:
@@ -73,6 +79,12 @@ Access Frontend at `http://localhost:8080` and Backend at `http://localhost:3000
 ## Testing
 
 *   **Backend Unit Tests**: `npm run test -w apps/backend`
+*   **Backend E2E Tests**: `npm run test:e2e`
+*   **Frontend Unit Tests**: `npm run test -w apps/frontend`
+
+## AI System & Workflow
+
+The development of this project followed a structured AI-agent workflow. For more technical details on how the database, containerization, and tests were implemented, see [AGENTS.md](./AGENTS.md).
 *   **CI/CD**: Automated via GitHub Actions on push.
 
 ## License

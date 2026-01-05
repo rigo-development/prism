@@ -10,6 +10,9 @@
         "build": "npm run build --workspaces",
         "test": "npm run test --workspaces",
         "test:e2e": "npm run test:e2e -w apps/backend",
+        "db:init": "npx prisma migrate dev -w apps/backend",
+        "db:generate": "npx prisma generate -w apps/backend",
+        "setup": "npm install && npm run build && npm run db:init",
         "dev": "concurrently -n \"SHARED,BACKEND,FRONTEND\" -c \"yellow,blue,magenta\" \"npm run dev -w packages/shared\" \"npm run dev -w apps/backend\" \"npm run dev -w apps/frontend\""
     },
     "devDependencies": {
