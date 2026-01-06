@@ -1,4 +1,4 @@
-name: CI
+name: CI/CD
 
 on:
   push:
@@ -42,3 +42,43 @@ jobs:
       
     - name: Build Frontend
       run: npm run build -w apps/frontend
+
+  deploy:
+    name: Deploy to Vercel
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    # Only deploy on push to main or develop (not on PRs)
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop')
+    
+    steps:
+    - name: Determine Environment
+      id: env
+      run: |
+        if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+          echo "environment=production" >> $GITHUB_OUTPUT
+          echo "backend_hook=${{ secrets.VERCEL_BACKEND_DEPLOY_HOOK_PROD }}" >> $GITHUB_OUTPUT
+          echo "frontend_hook=${{ secrets.VERCEL_FRONTEND_DEPLOY_HOOK_PROD }}" >> $GITHUB_OUTPUT
+        else
+          echo "environment=preview" >> $GITHUB_OUTPUT
+          echo "backend_hook=${{ secrets.VERCEL_BACKEND_DEPLOY_HOOK_DEV }}" >> $GITHUB_OUTPUT
+          echo "frontend_hook=${{ secrets.VERCEL_FRONTEND_DEPLOY_HOOK_DEV }}" >> $GITHUB_OUTPUT
+        fi
+
+    - name: Trigger Backend Deployment
+      if: steps.env.outputs.backend_hook != ''
+      run: |
+        curl -X POST "${{ steps.env.outputs.backend_hook }}"
+        echo "✅ Backend deployment triggered for ${{ steps.env.outputs.environment }}"
+
+    - name: Trigger Frontend Deployment
+      if: steps.env.outputs.frontend_hook != ''
+      run: |
+        curl -X POST "${{ steps.env.outputs.frontend_hook }}"
+        echo "✅ Frontend deployment triggered for ${{ steps.env.outputs.environment }}"
+
+    - name: Deployment Summary
+      run: |
+        echo "🚀 Deployments triggered successfully!"
+        echo "Environment: ${{ steps.env.outputs.environment }}"
+        echo "Branch: ${{ github.ref_name }}"
+        echo "Commit: ${{ github.sha }}"

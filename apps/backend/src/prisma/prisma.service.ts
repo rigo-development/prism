@@ -14,8 +14,8 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
 
         const dbUrl = process.env.DATABASE_URL;
 
-        // Local Dev fallback: If not on Vercel, we might still want to use Postgres if pgUrl is set
-        const isPg = !!(process.env.VERCEL || (pgUrl && pgUrl.startsWith('postgres')));
+        // Only use Postgres on Vercel or when explicitly in production
+        const isPg = !!(process.env.VERCEL);
         let finalUrl: string = '';
 
         if (isPg) {
