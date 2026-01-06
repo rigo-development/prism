@@ -10,5 +10,12 @@ export default defineConfig({
             '@': path.resolve(__dirname, './src'),
             '@prism/shared': path.resolve(__dirname, '../../packages/shared/src/index.ts')
         }
+    },
+    optimizeDeps: {
+        exclude: [
+            'class-transformer',
+            'class-validator',
+            '@nestjs/mapped-types'
+        ]
     }
 })
