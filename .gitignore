@@ -53,7 +53,7 @@ test-results/
 *.db-journal
 
 # Prisma
-src/generated/
+generated/
 
 # Project Specific
 test_*.txt
