@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.env
+
+# Prisma generated client
+src/generated/
+
+# SQLite database
+prisma/*.db
+prisma/*.db-journal

@@ -47,3 +47,16 @@ logs/
 # Testing
 playwright-report/
 test-results/
+
+# SQLite
+*.db
+*.db-journal
+
+# Prisma
+src/generated/
+
+# Project Specific
+test_*.txt
+test_debug*.txt
+test_error*.txt
+test_output.txt

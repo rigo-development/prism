@@ -6,10 +6,12 @@ Prism is a production-style educational project built to demonstrate the integra
 
 *   **Monorepo**: NPM Workspaces
 *   **Backend**: NestJS + TypeScript (Modular Architecture, DTOs, Validation)
+*   **Database**: SQLite + Prisma ORM
 *   **Frontend**: Vue 3 + TypeScript + Vite + TailwindCSS
 *   **Shared**: Common DTOs and Types
 *   **AI Integration**: Google Gemini API (with rate limiting)
-*   **CI**: GitHub Actions
+*   **DevOps**: Docker, GitHub Actions CI
+*   **AI Development**: See [AGENTS.md](./AGENTS.md)
 
 ## Features (MVP)
 
@@ -29,41 +31,75 @@ prism/
 │   └── shared/         # Shared Types/DTOs
 ```
 
-## Getting Started
+## Local Development Setup
 
-1.  **Install Dependencies**
+Prism allows you to test both local and production environments seamlessly.
+
+### Mode 1: Local SQLite (Default)
+Ideal for standard development without external dependencies.
+1.  **Initialize**:
     ```bash
-    npm install
+    npm run setup:local
+    ```
+2.  **Run**:
+    ```bash
+    npm run dev
     ```
 
-2.  **Build Shared Library**
-    ```bash
-    npm run build -w packages/shared
-    ```
-
-3.  **Configure Environment**
-    Create `apps/backend/.env` (optional for simple usage, required for Real AI):
+### Mode 2: Vercel Postgres (Production Sync)
+Use this to test your cloud database locally.
+1.  **Configure Environment**:
+    Add your Vercel/Neon connection string to `apps/backend/.env`:
     ```env
-    GEMINI_API_KEY=your_key_here
+    PRISMA_DATABASE_URL="postgres://user:pass@host/db?sslmode=require"
     ```
-    *If no key is provided, the system falls back to a Mock Provider for demonstration.*
-
-4.  **Rate Limiting**
-    To protect the Gemini free tier, the API is rate-limited to 5 requests per minute per IP.
-
-5.  **Run Development Servers**
+2.  **Initialize**:
     ```bash
-    # Open two terminals:
-    npm run dev -w apps/backend
-    npm run dev -w apps/frontend
+    npm run setup:postgres
+    ```
+3.  **Run**:
+    ```bash
+    npm run dev
     ```
 
-6.  **Access App**
-    Open `http://localhost:5173` (or port shown in terminal).
+### Switching Environments
+If you already have the project set up and just want to toggle:
+*   Switch to **SQLite**: `npm run db:local:sync`
+*   Switch to **Postgres**: `npm run db:prod:sync`
+
+## Vercel Deployment
+
+This project is optimized for a zero-config deployment on Vercel:
+1.  **Framework**: Select `NestJS` for the backend and `Vite` for the frontend.
+2.  **Build Command**: The root `package.json` includes `vercel-build`, which Vercel will use to:
+    *   Initialize the Postgres Prisma Client.
+    *   Automatically push schema changes to your Vercel Postgres instance.
+    *   Build the monorepo.
+3.  **Environment Variables**:
+    *   Ensure `PRISMA_DATABASE_URL` (or `POSTGRES_PRISMA_URL`) is set.
+    *   Set `GEMINI_API_KEY` in settings.
+
+## Health & Status Check
+Visit `http://localhost:3000/api/v1/health` to see your system status.
+*   Append `?ping=true` to verify the live database connection (passive by default).
+
+## Docker Support (Recommended)
+Run the entire stack with one command:
+```bash
+docker-compose up --build
+```
+Access Frontend at `http://localhost:8080` and Backend at `http://localhost:3000`.
+
 
 ## Testing
 
 *   **Backend Unit Tests**: `npm run test -w apps/backend`
+*   **Backend E2E Tests**: `npm run test:e2e`
+*   **Frontend Unit Tests**: `npm run test -w apps/frontend`
+
+## AI System & Workflow
+
+The development of this project followed a structured AI-agent workflow. For more technical details on how the database, containerization, and tests were implemented, see [AGENTS.md](./AGENTS.md).
 *   **CI/CD**: Automated via GitHub Actions on push.
 
 ## License
