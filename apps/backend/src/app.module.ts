@@ -5,6 +5,7 @@ import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 import { HealthModule } from './modules/health/health.module';
 import { PrismaModule } from './prisma/prisma.module';
+import { McpModule } from './modules/mcp/mcp.module';
 
 @Module({
     imports: [
@@ -19,6 +20,7 @@ import { PrismaModule } from './prisma/prisma.module';
         ReviewModule,
         HealthModule,
         PrismaModule,
+        McpModule,
     ],
     providers: [
         {
