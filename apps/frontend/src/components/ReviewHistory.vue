@@ -14,9 +14,10 @@ interface HistoryItem {
 const props = defineProps<{
   history: HistoryItem[];
   loading: boolean;
+  isMobile?: boolean;
 }>();
 
-const emit = defineEmits(['select', 'clear']);
+const emit = defineEmits(['select', 'clear', 'close']);
 
 const formatDate = (dateStr: string) => {
   const date = new Date(dateStr);
@@ -32,25 +33,39 @@ const getScoreColor = (score: number) => {
 
 <template>
   <div class="flex flex-col h-full bg-slate-900 overflow-hidden">
-    <div class="p-4 border-b border-slate-700 flex items-center justify-between">
-      <h2 class="text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center">
-        <span class="mr-2">🕒</span> History
-      </h2>
+    <div class="p-3 md:p-4 border-b border-slate-700 flex items-center justify-between">
+      <div class="flex items-center space-x-2">
+        <!-- Mobile Close Button -->
+        <button 
+          v-if="isMobile"
+          @click="emit('close')"
+          class="tap-target p-2 -ml-2 rounded-lg hover:bg-slate-800 transition-colors"
+          aria-label="Close history"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+        <h2 class="text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center">
+          <span class="mr-2">🕒</span> History
+        </h2>
+      </div>
       <button 
         v-if="history.length > 0"
         @click="emit('clear')"
-        class="text-[10px] font-bold text-slate-500 hover:text-red-400 transition-colors uppercase tracking-tighter"
+        class="tap-target text-[10px] font-bold text-slate-500 hover:text-red-400 transition-colors uppercase tracking-tighter px-2 py-1"
       >
         Clear All
       </button>
     </div>
 
     <div class="flex-1 overflow-y-auto custom-scrollbar p-2">
-      <div v-if="loading && history.length === 0" class="flex justify-center p-8">
+      <div v-if="loading && history.length === 0" class="flex justify-center p-6 md:p-8">
         <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-500"></div>
       </div>
       
-      <div v-else-if="history.length === 0" class="p-8 text-center text-slate-500 text-sm italic">
+      <div v-else-if="history.length === 0" class="p-6 md:p-8 text-center text-slate-500 text-xs md:text-sm italic">
         No recent activity
       </div>
 
@@ -59,14 +74,14 @@ const getScoreColor = (score: number) => {
           v-for="item in history" 
           :key="item.id"
           @click="emit('select', item)"
-          class="w-full text-left p-3 rounded-lg border border-transparent hover:border-slate-700 hover:bg-slate-800 transition-all group relative overflow-hidden"
+          class="w-full text-left p-3 rounded-lg border border-transparent hover:border-slate-700 hover:bg-slate-800 transition-all group relative overflow-hidden tap-target"
         >
           <div class="flex justify-between items-start mb-1">
             <span class="text-xs font-bold text-blue-400 uppercase tracking-tighter">{{ item.focus }}</span>
             <span class="text-[10px] text-slate-500">{{ formatDate(item.createdAt) }}</span>
           </div>
           
-          <div class="text-sm font-medium text-slate-200 line-clamp-1 mb-1">
+          <div class="text-xs md:text-sm font-medium text-slate-200 line-clamp-1 mb-1">
             {{ item.summary }}
           </div>
           
