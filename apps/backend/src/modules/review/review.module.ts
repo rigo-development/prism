@@ -9,5 +9,7 @@ import { LlmModule } from '../llm/llm.module';
     imports: [ConfigModule, LlmModule, PrismaModule],
     controllers: [ReviewController],
     providers: [ReviewService],
+    exports: [ReviewService],
 })
 export class ReviewModule { }
+
