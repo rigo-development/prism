@@ -7,8 +7,8 @@ Prism is a production-style educational project built to demonstrate the integra
 Experience Prism in action:
 
 *   **Frontend Application**: [https://prism-two-snowy.vercel.app/](https://prism-two-snowy.vercel.app/)
-*   **Backend API Documentation**: [https://prism-backend-drab.vercel.app//api/v1/docs](https://prism-backend-drab.vercel.app//api/v1/docs)
-*   **API Health Check**: [https://prism-backend-drab.vercel.app/api/v1/health](https://prism-backend-drab.vercel.app//api/v1/health)
+*   **Backend API Documentation**: [https://prism-backend-drab.vercel.app/api/v1/docs](https://prism-backend-drab.vercel.app/api/v1/docs)
+*   **API Health Check**: [https://prism-backend-drab.vercel.app/api/v1/health](https://prism-backend-drab.vercel.app/api/v1/health)
 
 > **Note**: The application is deployed on Vercel with automatic CI/CD via GitHub Actions. Every push to `main` triggers production deployment, while `develop` branch deploys to preview environments.
 
