@@ -37,10 +37,10 @@ export class LlmService {
             this.logger.error('Failed to list models from Gemini API', error);
             // Fallback to a safe list if API fails
             return [
-                'gemini-1.5-flash',
-                'gemini-1.5-flash-8b',
-                'gemini-1.5-pro',
-                'gemini-2.0-flash-exp'
+                'gemini-2.5-flash',
+                'gemini-2.5-pro',
+                'gemini-2.0-flash',
+                'gemini-flash-latest'
             ];
         }
     }
@@ -52,7 +52,7 @@ export class LlmService {
         }
 
         try {
-            const modelName = dto.model || 'gemini-1.5-flash';
+            const modelName = dto.model || 'gemini-2.5-flash';
             const model = this.genAI.getGenerativeModel({
                 model: modelName,
                 systemInstruction: `
