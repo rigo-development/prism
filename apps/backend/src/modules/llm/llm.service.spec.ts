@@ -48,7 +48,7 @@ describe('LlmService', () => {
     it('should fallback to mock list if API fails', async () => {
         mockedAxios.get.mockRejectedValue(new Error('API Fail'));
         const result = await service.listModels();
-        expect(result).toContain('gemini-1.5-flash');
+        expect(result).toContain('gemini-2.5-flash');
     });
 
     it('should return mock response if no genAI', async () => {
