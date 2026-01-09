@@ -219,18 +219,18 @@ const toggleHistoryPanel = () => {
       </div>
 
       <!-- Action Buttons -->
-      <div class="flex-1 md:flex-none flex justify-end items-center space-x-2 md:space-x-3">
+      <div class="flex justify-end items-center space-x-2 md:space-x-3 ml-auto">
         <button 
           v-if="isHistoryMode && !isMobile"
           @click="startNewReview"
-          class="hidden md:block text-slate-400 hover:text-white text-sm font-medium transition-colors"
+          class="hidden md:block text-slate-400 hover:text-white text-sm font-medium transition-colors whitespace-nowrap"
         >
           New Analysis
         </button>
         <button 
           @click="handleAnalyze"
           :disabled="loading"
-          class="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed text-white px-3 md:px-6 py-2 rounded-lg font-bold shadow-lg shadow-blue-900/20 transition-all transform active:scale-95 text-sm md:text-base"
+          class="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed text-white px-3 md:px-6 py-2 rounded-lg font-bold shadow-lg shadow-blue-900/20 transition-all transform active:scale-95 text-sm md:text-base whitespace-nowrap"
         >
           <span class="hidden md:inline">{{ loading ? 'Analyzing...' : isHistoryMode ? 'Re-run Analysis' : 'Run Analysis' }}</span>
           <span class="md:hidden">{{ loading ? '...' : '▶' }}</span>
