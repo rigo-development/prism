@@ -276,7 +276,6 @@ Automated via GitHub Actions:
 - **[AGENTS.md](./AGENTS.md)** - AI-assisted development workflow
 - **[MCP_INTEGRATION.md](./MCP_INTEGRATION.md)** - MCP server usage guide
 - **[PROMPTS.md](./PROMPTS.md)** - Initial development prompts
-- **[DEPLOY_HOOKS_SETUP.md](./DEPLOY_HOOKS_SETUP.md)** - Deployment configuration
 
 ## License
 
